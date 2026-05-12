@@ -1,0 +1,49 @@
+# Makefile для программы подсчета максимальных нулей в двоичной записи
+
+# Компилятор и флаги
+CXX = g++
+CXXFLAGS = -Wall -Wextra -O2
+LDFLAGS =
+
+# Имена файлов
+TARGET = count_zeros
+SRCS = main.cpp zeros.cpp
+OBJS = $(SRCS:.cpp=.o)
+HEADERS = zeros.h
+
+# Директория установки (bin в домашнем каталоге)
+INSTALL_DIR = $(HOME)/bin
+
+# Стандартная цель (по умолчанию)
+.PHONY: all clean install
+
+all: $(TARGET)
+
+# Компоновка исполняемого файла
+$(TARGET): $(OBJS)
+	$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJS) $(LDFLAGS)
+	@echo "Компиляция завершена. Исполняемый файл: $(TARGET)"
+
+# Компиляция объектных файлов
+%.o: %.cpp $(HEADERS)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+# Очистка временных файлов
+clean:
+	rm -f $(OBJS) $(TARGET)
+	rm -f *~ *.swp *.swo
+	@echo "Очистка завершена"
+
+# Установка программы
+install: $(TARGET)
+	@mkdir -p $(INSTALL_DIR)
+	cp $(TARGET) $(INSTALL_DIR)/
+	@echo "Программа установлена в $(INSTALL_DIR)/$(TARGET)"
+
+# Показать справку
+help:
+	@echo "Доступные команды:"
+	@echo "  make        - скомпилировать программу"
+	@echo "  make clean  - удалить объектные и исполняемые файлы"
+	@echo "  make install- установить программу в ~/bin/"
+	@echo "  make help   - показать эту справку"
